@@ -2,28 +2,27 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <stdlib.h>
-#include <netinet/in.h>
 #include <string.h>
 #include <pthread.h>
 //#include <linux/in.h>
 #include <netinet/in.h>
+#include "net.h"
 
-typedef struct
-{
-	int sock;
-	struct sockaddr address;
-	int addr_len;
-} connection_t;
 
 void* process(void* ptr)
 {
-	char buffer;
-	connection_t* conn;
 	if (!ptr) pthread_exit(0);
-	conn = (connection_t*) ptr;
-	read(conn->sock, &buffer, sizeof(char));
-	printf("[*] The Message: (%c) [*]\n", buffer);
+	connection_t* conn = (connection_t*) ptr;
+	pthread_t sendth;
+	pthread_create(&sendth, 0, sendmes, (void*)conn);
+	pthread_t recth;
+	pthread_create(&recth, 0, recmes, (void*)conn);
+	pthread_join(sendth, NULL);
+	pthread_join(recth, NULL);
 
+	close(conn->sock);
+	free(conn);
+	pthread_exit(0);
 }
 
 int main(int argc, char const *argv[])
@@ -62,10 +61,10 @@ int main(int argc, char const *argv[])
 		printf("[*] failed to listen... [*]\n");
 		return -5;
 	}
-	printf("[*] server: ...\n");
-	printf("	   listening started... [*]\n");
 	while (1)
 	{
+		printf("[*] server: ...\n");
+		printf("	   listening started... [*]\n");
 		connection = (connection_t*)malloc(sizeof(connection_t));
 		connection->sock = accept(sock, &connection->address, &connection->addr_len);
 		if (connection->sock <= 0)
@@ -75,9 +74,9 @@ int main(int argc, char const *argv[])
 		}
 		else
 		{
-			printf("[*] connection created for request [*]\n");
+			printf("[*] connection created for client [*]\n");
 			pthread_create(&thread, 0, process, (void*)connection);
-			pthread_detach(thread);
+			pthread_join(thread, NULL);
 		}
 		sleep(2);
 	}

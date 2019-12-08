@@ -1,8 +1,13 @@
+#include <unistd.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netdb.h>
 //special socket.h file for bsd systems:
 #include <netinet/in.h>
+#include <pthread.h>
+#include "net.h"
+#include <string.h>
+#include <stdlib.h>
 
 int main(int argc, char ** argv)
 {
@@ -40,11 +45,19 @@ int main(int argc, char ** argv)
 	{
 		printf("[*] connection to host is not possible... [*]\n");
 		return -5;
-	}printf("[*] created connection to host [*]\n");
+	}printf("[*] connection created to host [*]\n");
+	connection_t* connection = (connection_t*)malloc(sizeof(connection_t));
+	connection->sock = sock;
 	/* dude please send messages here */
+		
 	printf("[*] starting messageing... [*]\n");
-	write(sock, 'y', sizeof(char));
+	pthread_t threadsend;
+	pthread_create(&threadsend, 0, sendmes, (void*)connection);
+	pthread_t threadrecv;
+	pthread_create(&threadrecv, 0, recmes, (void*)connection);
+	pthread_join(threadrecv, NULL);
+	pthread_join(threadsend, NULL);
+	
 	printf("[*] end of messages [*]\n");
-	close(sock);
 	return 0;
 }
