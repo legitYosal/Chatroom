@@ -12,7 +12,7 @@
 connection_t* clients[1398];
 int clientLimit = 0;
 
-void* sendmes(void* ptr)
+void* process(void* ptr)
 {
         if (!ptr) pthread_exit(0);
 				int i;
@@ -23,7 +23,7 @@ void* sendmes(void* ptr)
 								char buffer[256] = {0};
 								read (conn->sock, buffer, 256 * sizeof(char));
                 if (buffer == ""){
-									printf("connection closed form client");
+									printf("connection closed form client\n");
 									break;
 								}
 								for (i = 0; i < clientLimit; i ++){
@@ -34,20 +34,6 @@ void* sendmes(void* ptr)
         close(conn->sock);
         free(conn);
         pthread_exit(0);
-}
-void* process(void* ptr)
-{
-	if (!ptr) pthread_exit(1);
-	connection_t* conn = (connection_t*) ptr;
-	char str[256];
-	while(1)
-	{
-			scanf("%[^\n]%*c", str);
-
-	}
-	close(conn->sock);
-	free(conn);
-	pthread_exit(0);
 }
 
 int main(int argc, char const *argv[])
