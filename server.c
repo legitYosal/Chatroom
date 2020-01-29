@@ -27,8 +27,10 @@ void* process(void* ptr)
 									break;
 								}
 								for (i = 0; i < clientLimit; i ++){
-									len = strlen(buffer);
-									write(clients[i]->sock, buffer, len * sizeof(char));
+									if (conn != clients[i]){
+										len = strlen(buffer);
+										write(clients[i]->sock, buffer, len * sizeof(char));
+									}
 								}
         }
         close(conn->sock);
