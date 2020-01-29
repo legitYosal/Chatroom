@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <arpa/inet.h>
 //#include <linux/in.h>
 #include <netinet/in.h>
 #include "net.h"
@@ -34,7 +35,7 @@ int main(int argc, char const *argv[])
 	pthread_t thread;
 	if (argc != 2)
 	{
-		printf("[*] ruthleth input absorbed... [*]\n");
+		printf("[*] input error absorbed... [*]\n");
 		return -1;
 	}
 	if (sscanf(argv[1], "%d", &port) <= 0)
@@ -47,7 +48,8 @@ int main(int argc, char const *argv[])
 	{
 		printf("[*] failed to open socket... [*]\n");
 		return -3;
-	}printf("[*] socket successfully created [*]\n");
+	}
+	printf("[*] socket successfully created [*]\n");
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = inet_addr("127.0.0.1");//it was other in org
 	address.sin_port = htons(port);
