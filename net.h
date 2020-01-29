@@ -21,9 +21,13 @@ void* recmes(void* ptr)
         connection_t* conn = (connection_t*) ptr;
         while(1)
         {
-                char buffer[512] = {0};
-                read (conn->sock, buffer, 512 * sizeof(char));
-                printf("%s [**] RECIEVED\n");
+                char buffer[256] = {0};
+                read (conn->sock, buffer, 256 * sizeof(char));
+								if (buffer == ""){
+									printf("connection closed by server\n");
+									break;
+								}
+                printf("(%s) [**] RECIEVED\n");
         }
         close(conn->sock);
         free(conn);
@@ -33,12 +37,14 @@ void* recmes(void* ptr)
 void* sendmes(void* ptr)
 {
         if (!ptr) pthread_exit(0);
-        char str[512];
+        char str[256];
+				int len;
         connection_t* conn = (connection_t*) ptr;
         while(1)
         {
                 scanf("%[^\n]%*c", str);
-                writeString(str, conn);
+								len = strlen(str);
+								write(conn->sock, str, len * sizeof(char));
         }
         close(conn->sock);
         free(conn);

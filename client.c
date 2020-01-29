@@ -48,8 +48,8 @@ int main(int argc, char ** argv)
 	}printf("[*] connection created to host [*]\n");
 	connection_t* connection = (connection_t*)malloc(sizeof(connection_t));
 	connection->sock = sock;
-	/* dude please send messages here */
-		
+	/*  send messages here */
+
 	printf("[*] starting messageing... [*]\n");
 	pthread_t threadsend;
 	pthread_create(&threadsend, 0, sendmes, (void*)connection);
@@ -57,7 +57,7 @@ int main(int argc, char ** argv)
 	pthread_create(&threadrecv, 0, recmes, (void*)connection);
 	pthread_join(threadrecv, NULL);
 	pthread_join(threadsend, NULL);
-	
+
 	printf("[*] end of messages [*]\n");
 	return 0;
 }

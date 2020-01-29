@@ -9,18 +9,42 @@
 #include <netinet/in.h>
 #include "net.h"
 
+connection_t* clients[1398];
+int clientLimit = 0;
 
+void* sendmes(void* ptr)
+{
+        if (!ptr) pthread_exit(0);
+				int i;
+				int len;
+        connection_t* conn = (connection_t*) ptr;
+        while(1)
+        {
+								char buffer[256] = {0};
+								read (conn->sock, buffer, 256 * sizeof(char));
+                if (buffer == ""){
+									printf("connection closed form client");
+									break;
+								}
+								for (i = 0; i < clientLimit; i ++){
+									len = strlen(buffer);
+									write(clients[i]->sock, buffer, len * sizeof(char));
+								}
+        }
+        close(conn->sock);
+        free(conn);
+        pthread_exit(0);
+}
 void* process(void* ptr)
 {
-	if (!ptr) pthread_exit(0);
+	if (!ptr) pthread_exit(1);
 	connection_t* conn = (connection_t*) ptr;
-	pthread_t sendth;
-	pthread_create(&sendth, 0, sendmes, (void*)conn);
-	pthread_t recth;
-	pthread_create(&recth, 0, recmes, (void*)conn);
-	pthread_join(sendth, NULL);
-	pthread_join(recth, NULL);
+	char str[256];
+	while(1)
+	{
+			scanf("%[^\n]%*c", str);
 
+	}
 	close(conn->sock);
 	free(conn);
 	pthread_exit(0);
@@ -77,8 +101,14 @@ int main(int argc, char const *argv[])
 		else
 		{
 			printf("[*] connection created for client [*]\n");
-			pthread_create(&thread, 0, process, (void*)connection);
-			pthread_join(thread, NULL);
+			if (clientLimit < 1398){
+				clients[clientLimit] = connection;
+				clientLimit++;
+				pthread_create(&thread, 0, process, (void*)connection);
+			}
+			else {
+				printf("maximom clients reached \n");
+			}
 		}
 		sleep(2);
 	}
