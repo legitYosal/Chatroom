@@ -12,6 +12,14 @@
 connection_t* clients[1398];
 int clientLimit = 0;
 
+typedef struct
+{
+	int sock;
+	struct sockaddr_in address;
+	socklen_t addr_len;
+} connection_t;
+
+
 void* process(void* ptr)
 {
         if (!ptr) pthread_exit(0);
@@ -37,7 +45,7 @@ void* process(void* ptr)
 								for (i = 0; i < clientLimit; i ++){
 										inet_ntop(AF_INET, &((clients[i]->address).sin_addr), othersIp, INET_ADDRSTRLEN);
 										othersPort = ntohs((clients[i]->address).sin_port);
-										printf("checking with client %s %d\n", othersIp, othersPort);
+										// printf("checking with client %s %d\n", othersIp, othersPort);
 										if (strcmp(ip, othersIp) != 0 || port != othersPort){
 											len = strlen(buffer);
 											write(clients[i]->sock, buffer, len * sizeof(char));

@@ -9,6 +9,50 @@
 #include <string.h>
 #include <stdlib.h>
 
+typedef struct
+{
+	int sock;
+	struct sockaddr_in address;
+	socklen_t addr_len;
+} connection_t;
+
+
+void* recmes(void* ptr)
+{
+        if (!ptr) pthread_exit(0);
+        connection_t* conn = (connection_t*) ptr;
+        while(1)
+        {
+                char buffer[256] = {0};
+                read (conn->sock, buffer, 256 * sizeof(char));
+								if (buffer == "" | buffer == NULL){
+									printf("connection closed by server\n");
+									break;
+								}
+                printf("(%s) [**] RECIEVED\n");
+        }
+        close(conn->sock);
+        free(conn);
+        pthread_exit(0);
+}
+
+void* sendmes(void* ptr)
+{
+        if (!ptr) pthread_exit(0);
+        char str[256];
+				int len;
+        connection_t* conn = (connection_t*) ptr;
+        while(1)
+        {
+                scanf("%[^\n]%*c", str);
+								len = strlen(str);
+								write(conn->sock, str, len * sizeof(char));
+        }
+        close(conn->sock);
+        free(conn);
+        pthread_exit(0);
+}
+
 int main(int argc, char ** argv)
 {
 	int port;
