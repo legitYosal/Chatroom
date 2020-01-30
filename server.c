@@ -20,9 +20,12 @@ void* process(void* ptr)
         connection_t* conn = (connection_t*) ptr;
 				char ip[INET_ADDRSTRLEN];
 				char othersIp[INET_ADDRSTRLEN];
+				int port;
+				int othersPort;
 				inet_ntop(AF_INET, &((conn->address).sin_addr), ip, INET_ADDRSTRLEN);
+				port = ntohs((conn->address).sin_port);
 				printf("connection established with IP : %s and PORT : %d\n",
-																				ip, ntohs((conn->address).sin_port));
+																				ip, port);
         while(1)
         {
 								char buffer[256] = {0};
@@ -33,7 +36,9 @@ void* process(void* ptr)
 								}
 								for (i = 0; i < clientLimit; i ++){
 										inet_ntop(AF_INET, &((clients[i]->address).sin_addr), othersIp, INET_ADDRSTRLEN);
-										if (strcmp(ip, othersIp) != 0 && ntohs((conn->address).sin_port) != ntohs((clients[i]->address).sin_port)){
+										othersPort = ntohs((clients[i]->address).sin_port);
+										printf("checking with client %s %d\n", othersIp, othersPort);
+										if (strcmp(ip, othersIp) != 0 && port != othersPort){
 											len = strlen(buffer);
 											write(clients[i]->sock, buffer, len * sizeof(char));
 										}
@@ -95,8 +100,7 @@ int main(int argc, char const *argv[])
 			printf("[*] one unvalid connection lost... [*]\n");
 			free(connection);
 		}
-		else
-		{
+		else{
 			printf("[*] connection created for client [*]\n");
 			if (clientLimit < 1398){
 				clients[clientLimit] = connection;
