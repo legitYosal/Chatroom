@@ -5,7 +5,7 @@
 typedef struct
 {
 	int sock;
-	struct sockaddr address;
+	struct sockaddr_in address;
 	int addr_len;
 } connection_t;
 

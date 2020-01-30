@@ -18,6 +18,7 @@ void* process(void* ptr)
 				int i;
 				int len;
         connection_t* conn = (connection_t*) ptr;
+				char ip[100];
         while(1)
         {
 								char buffer[256] = {0};
@@ -27,7 +28,7 @@ void* process(void* ptr)
 									break;
 								}
 								for (i = 0; i < clientLimit; i ++){
-									if (conn != clients[i]){
+									if ((*conn).address != (*clients[i]).address){
 										len = strlen(buffer);
 										write(clients[i]->sock, buffer, len * sizeof(char));
 									}
@@ -80,7 +81,7 @@ int main(int argc, char const *argv[])
 		printf("[*] server: ...\n");
 		printf("	   listening started... [*]\n");
 		connection = (connection_t*)malloc(sizeof(connection_t));
-		connection->sock = accept(sock, &connection->address, &connection->addr_len);
+		connection->sock = accept(sock, (struct sockaddr*)&connection->address, &connection->addr_len);
 		if (connection->sock <= 0)
 		{
 			printf("[*] one unvalid connection lost... [*]\n");
