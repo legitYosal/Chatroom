@@ -5,7 +5,6 @@
 //special socket.h file for bsd systems:
 #include <netinet/in.h>
 #include <pthread.h>
-#include "net.h"
 #include <string.h>
 #include <stdlib.h>
 

@@ -7,7 +7,6 @@
 #include <arpa/inet.h>
 //#include <linux/in.h>
 #include <netinet/in.h>
-#include "net.h"
 
 connection_t* clients[1398];
 int clientLimit = 0;
