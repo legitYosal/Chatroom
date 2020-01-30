@@ -19,7 +19,7 @@ void* process(void* ptr)
 				int len;
         connection_t* conn = (connection_t*) ptr;
 				char ip[INET_ADDRSTRLEN];
-				char othersIp[INET_ADDRSTRLEN]
+				char othersIp[INET_ADDRSTRLEN];
 				inet_ntop(AF_INET, &((conn->address).sin_addr), ip, INET_ADDRSTRLEN);
 				printf("connection established with IP : %s and PORT : %d\n",
 																				ip, ntohs((conn->address).sin_port));
@@ -32,7 +32,7 @@ void* process(void* ptr)
 									break;
 								}
 								for (i = 0; i < clientLimit; i ++){
-										inet_ntop(AF_INET, &((clients[i]->address).sin_addr), othersIp, INET_ADDRSTRLEN)
+										inet_ntop(AF_INET, &((clients[i]->address).sin_addr), othersIp, INET_ADDRSTRLEN);
 										if (strcmp(ip, othersIp) != 0 && ntohs((conn->address).sin_port) != ntohs((clients[i]->address).sin_port)){
 											len = strlen(buffer);
 											write(clients[i]->sock, buffer, len * sizeof(char));
