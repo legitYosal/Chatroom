@@ -28,7 +28,8 @@ void* process(void* ptr)
 									break;
 								}
 								for (i = 0; i < clientLimit; i ++){
-									if ((*conn).address != (*clients[i]).address){
+									if ((*conn).address.sin_addr != (*clients[i]).address.sin_addr &&
+											(*conn).address.sin_port != (*client[i]).address.sin_port){
 										len = strlen(buffer);
 										write(clients[i]->sock, buffer, len * sizeof(char));
 									}
