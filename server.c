@@ -43,7 +43,7 @@ int main(int argc, char const *argv[])
 	struct sockaddr_in address;
 	int port;
 	connection_t* connection;
-	connection->addr_len = sizeof(struct sockaddr);
+	socklen_t cli_len=sizeof(struct sockaddr);
 	pthread_t thread;
 	if (argc != 2)
 	{
@@ -80,7 +80,8 @@ int main(int argc, char const *argv[])
 		printf("[*] server: ...\n");
 		printf("	   listening started... [*]\n");
 		connection = (connection_t*)malloc(sizeof(connection_t));
-		connection->sock = accept(sock, (struct sockaddr*) &(connection->address), &connection->addr_len);
+		connection->sock = accept(sock, (struct sockaddr*) &(connection->address), &cli_len);
+		connection->addr_len = clie_len;
 		char ip[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &((connection->address).sin_addr), ip, INET_ADDRSTRLEN);
 		printf("connection established with IP : %s and PORT : %d\n",
