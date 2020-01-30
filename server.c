@@ -30,7 +30,7 @@ void* process(void* ptr)
         {
 								char buffer[256] = {0};
 								read (conn->sock, buffer, 256 * sizeof(char));
-                if (buffer == ""){
+                if (buffer == "" || buffer == NULL){
 									printf("connection closed form client\n");
 									break;
 								}
@@ -38,7 +38,7 @@ void* process(void* ptr)
 										inet_ntop(AF_INET, &((clients[i]->address).sin_addr), othersIp, INET_ADDRSTRLEN);
 										othersPort = ntohs((clients[i]->address).sin_port);
 										printf("checking with client %s %d\n", othersIp, othersPort);
-										if (strcmp(ip, othersIp) != 0 && port != othersPort){
+										if (strcmp(ip, othersIp) != 0 || port != othersPort){
 											len = strlen(buffer);
 											write(clients[i]->sock, buffer, len * sizeof(char));
 										}
