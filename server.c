@@ -28,11 +28,8 @@ void* process(void* ptr)
 									break;
 								}
 								for (i = 0; i < clientLimit; i ++){
-									if (inet_ntoa((*conn).address.sin_addr) != inet_ntoa((*clients[i]).address.sin_addr) &&
-											(*conn).address.sin_port != (*clients[i]).address.sin_port){
 										len = strlen(buffer);
 										write(clients[i]->sock, buffer, len * sizeof(char));
-									}
 								}
         }
         close(conn->sock);
@@ -82,7 +79,11 @@ int main(int argc, char const *argv[])
 		printf("[*] server: ...\n");
 		printf("	   listening started... [*]\n");
 		connection = (connection_t*)malloc(sizeof(connection_t));
-		connection->sock = accept(sock, (struct sockaddr*)&connection->address, &connection->addr_len);
+		connection->sock = accept(sock, (struct sockaddr*) &(connection->address), &connection->addr_len);
+		char ip[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &((connection->address).sin_addr), ip, INET_ADDRSTRLEN);
+		printf("connection established with IP : %s and PORT : %d\n",
+																		ip, ntohs((connection->address).sin_port));
 		if (connection->sock <= 0)
 		{
 			printf("[*] one unvalid connection lost... [*]\n");
