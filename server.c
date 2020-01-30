@@ -18,7 +18,11 @@ void* process(void* ptr)
 				int i;
 				int len;
         connection_t* conn = (connection_t*) ptr;
-				printf("connection address is %s\n" ,inet_ntoa((*conn).address.sin_addr));
+				char ip[INET_ADDRSTRLEN];
+				char othersIp[INET_ADDRSTRLEN]
+				inet_ntop(AF_INET, &((conn->address).sin_addr), ip, INET_ADDRSTRLEN);
+				printf("connection established with IP : %s and PORT : %d\n",
+																				ip, ntohs((conn->address).sin_port));
         while(1)
         {
 								char buffer[256] = {0};
@@ -28,8 +32,11 @@ void* process(void* ptr)
 									break;
 								}
 								for (i = 0; i < clientLimit; i ++){
-										len = strlen(buffer);
-										write(clients[i]->sock, buffer, len * sizeof(char));
+										inet_ntop(AF_INET, &((clients[i]->address).sin_addr), othersIp, INET_ADDRSTRLEN)
+										if (strcmp(ip, othersIp) != 0 && ntohs((conn->address).sin_port) != ntohs((clients[i]->address).sin_port)){
+											len = strlen(buffer);
+											write(clients[i]->sock, buffer, len * sizeof(char));
+										}
 								}
         }
         close(conn->sock);
@@ -81,11 +88,8 @@ int main(int argc, char const *argv[])
 		printf("	   listening started... [*]\n");
 		connection = (connection_t*)malloc(sizeof(connection_t));
 		connection->sock = accept(sock, (struct sockaddr*) &(connection->address), &cli_len);
-		connection->addr_len = clie_len;
-		char ip[INET_ADDRSTRLEN];
-		inet_ntop(AF_INET, &((connection->address).sin_addr), ip, INET_ADDRSTRLEN);
-		printf("connection established with IP : %s and PORT : %d\n",
-																		ip, ntohs((connection->address).sin_port));
+		connection->addr_len = cli_len;
+
 		if (connection->sock <= 0)
 		{
 			printf("[*] one unvalid connection lost... [*]\n");
