@@ -6,7 +6,7 @@ typedef struct
 {
 	int sock;
 	struct sockaddr_in address;
-	int addr_len;
+	socklen_t addr_len;
 } connection_t;
 
 void writeString(char* str, connection_t* conn)
