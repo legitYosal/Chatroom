@@ -18,7 +18,7 @@ void* process(void* ptr)
 				int i;
 				int len;
         connection_t* conn = (connection_t*) ptr;
-				char ip[100];
+				printf("connection address is %s\n" ,inet_ntoa((*conn).address.sin_addr));
         while(1)
         {
 								char buffer[256] = {0};
@@ -28,7 +28,7 @@ void* process(void* ptr)
 									break;
 								}
 								for (i = 0; i < clientLimit; i ++){
-									if ((*conn).address.sin_addr != (*clients[i]).address.sin_addr &&
+									if (strcmp(inet_ntoa((*conn).address.sin_addr), inet_ntoa((*clients[i]).address.sin_addr) != 0) &&
 											(*conn).address.sin_port != (*client[i]).address.sin_port){
 										len = strlen(buffer);
 										write(clients[i]->sock, buffer, len * sizeof(char));
