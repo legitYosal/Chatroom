@@ -43,6 +43,7 @@ int main(int argc, char const *argv[])
 	struct sockaddr_in address;
 	int port;
 	connection_t* connection;
+	connection->addr_len = sizeof(struct sockaddr_in);
 	pthread_t thread;
 	if (argc != 2)
 	{
