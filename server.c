@@ -1,22 +1,7 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/socket.h>
-#include <stdlib.h>
-#include <string.h>
-#include <pthread.h>
-#include <arpa/inet.h>
-//#include <linux/in.h>
-#include <netinet/in.h>
+#include "connstruct.h"
 
 connection_t* clients[1398];
 int clientLimit = 0;
-
-typedef struct
-{
-	int sock;
-	struct sockaddr_in address;
-	socklen_t addr_len;
-} connection_t;
 
 
 void* process(void* ptr)

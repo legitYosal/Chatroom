@@ -1,19 +1,4 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/socket.h>
-#include <netdb.h>
-//special socket.h file for bsd systems:
-#include <netinet/in.h>
-#include <pthread.h>
-#include <string.h>
-#include <stdlib.h>
-
-typedef struct
-{
-	int sock;
-	struct sockaddr_in address;
-	socklen_t addr_len;
-} connection_t;
+#include "connstruct.h"
 
 
 void* recmes(void* ptr)
